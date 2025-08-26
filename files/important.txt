@@ -1,0 +1,29 @@
+# 1. Gerekli araçları kur (başka bir sistemde)
+sudo dnf install rpm-build
+
+# 2. Çalışma dizini oluştur
+mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+cd ~/rpmbuild/SPECS
+
+# 3. Basit bir SPEC dosyası yaz
+cat > git-fake.spec <<EOF
+Name:           git
+Version:        1.0
+Release:        1
+Summary:        Fake git package for dependency resolution
+
+License:        Public Domain
+BuildArch:      noarch
+
+%description
+This is a dummy git package to satisfy RPM dependencies.
+
+%files
+
+EOF
+
+# 4. RPM oluştur
+rpmbuild -bb git-fake.spec
+
+# 5. Oluşan RPM’i offline RHEL sistemine taşı ve kur
+rpm -ivh ~/rpmbuild/RPMS/noarch/git-1.0-1.noarch.rpm
