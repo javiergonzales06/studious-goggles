@@ -1,0 +1,93 @@
+"""
+title: PDF Presentation Tool
+author: _00_ (I∀I)
+version: 0.0.1
+description: A tool to present PDF files to users via modal interface
+"""
+
+import os
+import tempfile
+from typing import Optional, Dict, Any
+from pydantic import BaseModel, Field
+
+class Tools:
+    def __init__(self):
+        self.citation = True
+        self.file_handler = True
+
+    def present_pdf(
+        self,
+        pdf_url: str = Field(description="URL or path to the PDF file"),
+        title: Optional[str] = Field(default="PDF Document", description="Title for the presentation"),
+        __user__: Optional[Dict[str, Any]] = None,
+        __id__: Optional[str] = None
+    ) -> str:
+        """
+        Present a PDF file to the user in a modal interface.
+
+        :param pdf_url: URL or file path to the PDF document
+        :param title: Title to display in the modal
+        :return: HTML content for modal presentation
+        """
+
+        # Generate modal HTML that will be rendered in the chat
+        modal_html = f"""
+        <div class="pdf-presentation-modal" style="border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin: 1rem 0;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1.125rem; font-weight: 600;">{title}</h3>
+                <button onclick="this.closest('.pdf-presentation-modal').style.display='none'"
+                        style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+
+            <div class="modal-tabs" style="border-bottom: 1px solid #e5e7eb; margin-bottom: 1rem;">
+                <button onclick="showTab(this, 'preview')" class="tab-btn active"
+                        style="padding: 0.5rem 1rem; border: none; background: none; border-bottom: 2px solid #3b82f6; color: #3b82f6; cursor: pointer;">
+                    Preview
+                </button>
+                <button onclick="showTab(this, 'info')" class="tab-btn"
+                        style="padding: 0.5rem 1rem; border: none; background: none; border-bottom: 2px solid transparent; cursor: pointer;">
+                    Info
+                </button>
+            </div>
+
+            <div class="tab-content">
+                <div id="preview" class="tab-pane active" style="display: block;">
+                    <iframe src="{pdf_url}"
+                            style="width: 100%; height: 500px; border: none; border-radius: 0.25rem;"
+                            title="{title}">
+                    </iframe>
+                </div>
+                <div id="info" class="tab-pane" style="display: none;">
+                    <p><strong>Document:</strong> {title}</p>
+                    <p><strong>Source:</strong> {pdf_url}</p>
+                    <p><strong>Type:</strong> PDF Document</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function showTab(button, tabName) {{
+            // Hide all tab panes
+            const panes = button.closest('.pdf-presentation-modal').querySelectorAll('.tab-pane');
+            panes.forEach(pane => pane.style.display = 'none');
+
+            // Remove active class from all buttons
+            const buttons = button.closest('.modal-tabs').querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {{
+                btn.style.borderBottomColor = 'transparent';
+                btn.style.color = 'inherit';
+                btn.classList.remove('active');
+            }});
+
+            // Show selected tab and mark button as active
+            document.getElementById(tabName).style.display = 'block';
+            button.style.borderBottomColor = '#3b82f6';
+            button.style.color = '#3b82f6';
+            button.classList.add('active');
+        }}
+        </script>
+        """
+
+        return modal_html
+        
+        ```
