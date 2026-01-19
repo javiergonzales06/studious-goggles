@@ -1,0 +1,4 @@
+# En son sürümü kontrol et (örneğin v3.0.0)
+wget https://github.com/kubesphere/kubekey/releases/download/v3.0.0/kubekey-v3.0.0-linux-amd64.tar.gz
+tar -xzf kubekey-v3.0.0-linux-amd64.tar.gz
+sudo mv kk /usr/local/bin/
